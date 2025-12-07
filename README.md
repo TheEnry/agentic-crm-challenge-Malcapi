@@ -9,6 +9,7 @@ Una challenge pratica per migliorare le proprie skill con **GitHub Copilot** svi
 ## 🎯 Obiettivo della Challenge
 
 L'obiettivo di questa challenge è imparare a utilizzare efficacemente GitHub Copilot per:
+
 - Generare codice in modo efficiente
 - Implementare funzionalità complesse con l'aiuto dell'AI
 - Migliorare la produttività nello sviluppo software
@@ -27,28 +28,32 @@ L'obiettivo di questa challenge è imparare a utilizzare efficacemente GitHub Co
 
 ## 📋 Prerequisiti
 
-- Node.js 16.x o superiore
+- Node.js 20.19 o superiore
 - NPM installato sul PC
 - (Opzionale) **ReUI MCP Server** per migliorare l'assistenza di GitHub Copilot → [Guida installazione](docs/MCP.md)
 
 ## 🚀 Installazione e Avvio
 
 1. **Clona il repository** e accedi alla root del progetto:
+
    ```bash
    cd agentic-crm-challenge
    ```
 
 2. **Installa le dipendenze**:
+
    ```bash
-   npm install --legacy-peer-deps
+   npm install
    ```
 
 3. **Esegui la build**:
+
    ```bash
    npm run build
    ```
 
 4. **Avvia il server di sviluppo**:
+
    ```bash
    npm run dev
    ```
@@ -60,36 +65,43 @@ L'obiettivo di questa challenge è imparare a utilizzare efficacemente GitHub Co
 Di seguito i task da completare durante la challenge. Usa GitHub Copilot per aiutarti nell'implementazione!
 
 ### Task 1: Setup Database SQLite
+
 - [ ] Configurare sql.js per utilizzare SQLite nel browser
 - [ ] Creare lo schema del database per contacts, companies, deals, tasks, notes
 - [ ] Implementare le funzioni CRUD base
 
 ### Task 2: Persistenza Contatti
+
 - [ ] Collegare la lista contatti al database SQLite
 - [ ] Implementare creazione nuovo contatto con salvataggio su DB
 - [ ] Implementare modifica e eliminazione contatti
 
 ### Task 3: Persistenza Aziende
+
 - [ ] Collegare la lista aziende al database SQLite
 - [ ] Implementare creazione nuova azienda con salvataggio su DB
 - [ ] Implementare modifica e eliminazione aziende
 
 ### Task 4: Gestione Deals
+
 - [ ] Collegare la pipeline deals al database SQLite
 - [ ] Implementare drag & drop con aggiornamento stato su DB
 - [ ] Implementare creazione e modifica deals
 
 ### Task 5: Tasks e Note
+
 - [ ] Implementare persistenza tasks
 - [ ] Implementare persistenza note
 - [ ] Collegare tasks e note a contatti/aziende
 
 ### Task 6: Dashboard Analytics
+
 - [ ] Implementare query aggregate per statistiche
 - [ ] Creare grafici dinamici basati sui dati reali
 - [ ] Aggiungere filtri per periodo temporale
 
 ### Bonus Tasks
+
 - [ ] Implementare ricerca full-text
 - [ ] Aggiungere export/import dati
 - [ ] Implementare undo/redo operazioni
