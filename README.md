@@ -107,12 +107,18 @@ Di seguito i task da completare durante la challenge. Usa GitHub Copilot per aiu
 - [ ] Implementare undo/redo operazioni
 
 ## 📚 Risorse Utili
-
 - [GitHub Copilot Documentation](https://docs.github.com/en/copilot)
 - [sql.js Documentation](https://sql.js.org/)
 - [React Documentation](https://react.dev/)
 - [Tailwind CSS Documentation](https://tailwindcss.com/docs)
 
-## 📝 License
+
+## Utilizzo di GitHub Copilot
+Leggi `copilot-instructions.md` per la configurazione, le best practice e le convenzioni del repository.  
+Consulta `prompts/challenges` per una libreria di prompt riutilizzabili, pensata appositamente per questo progetto.  
+
+**Suggerimento rapido:** quando chiedi a Copilot di generare codice, includi i percorsi dei file, i tipi e richiedi l’allineamento a TypeScript in modalità strict, alle regole degli hook ESLint, all’ordinamento delle classi Tailwind e agli import con alias `@`.
+
+## 📝 Licenza
 
 Questo progetto è stato creato per scopi educativi.
