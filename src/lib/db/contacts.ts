@@ -71,12 +71,12 @@ export function getContact(id: string): Contact | null {
   }
 
   const row = result[0];
-  const contact: Record<string, string | number> = {};
+  const rowData: Record<string, string | number> = {};
   row.columns.forEach((col, idx) => {
-    contact[col] = row.values[0][idx] as string | number;
+    rowData[col] = row.values[0][idx] as string | number;
   });
 
-  return deserializeContact(contact);
+  return deserializeContact(rowData);
 }
 
 export function getAllContacts(options?: QueryOptions): QueryResult<Contact> {
@@ -103,11 +103,11 @@ export function getAllContacts(options?: QueryOptions): QueryResult<Contact> {
   if (result.length > 0 && result[0].values.length > 0) {
     const row = result[0];
     row.values.forEach((values) => {
-      const contact: Record<string, string | number> = {};
+      const rowData: Record<string, string | number> = {};
       row.columns.forEach((col, idx) => {
-        contact[col] = values[idx] as string | number;
+        rowData[col] = values[idx] as string | number;
       });
-      contacts.push(deserializeContact(contact));
+      contacts.push(deserializeContact(rowData));
     });
   }
 

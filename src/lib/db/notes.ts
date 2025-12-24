@@ -65,12 +65,12 @@ export function getNote(id: string): Notes | null {
   }
 
   const row = result[0];
-  const note: Record<string, string | number> = {};
+  const rowData: Record<string, string | number> = {};
   row.columns.forEach((col, idx) => {
-    note[col] = row.values[0][idx] as string | number;
+    rowData[col] = row.values[0][idx] as string | number;
   });
 
-  return deserializeNote(note);
+  return deserializeNote(rowData);
 }
 
 export function getAllNotes(options?: QueryOptions): QueryResult<Notes> {
@@ -97,11 +97,11 @@ export function getAllNotes(options?: QueryOptions): QueryResult<Notes> {
   if (result.length > 0 && result[0].values.length > 0) {
     const row = result[0];
     row.values.forEach((values) => {
-      const note: Record<string, string | number> = {};
+      const rowData: Record<string, string | number> = {};
       row.columns.forEach((col, idx) => {
-        note[col] = values[idx] as string | number;
+        rowData[col] = values[idx] as string | number;
       });
-      notes.push(deserializeNote(note));
+      notes.push(deserializeNote(rowData));
     });
   }
 

@@ -97,12 +97,12 @@ export function getCompany(id: string): Company | null {
   }
 
   const row = result[0];
-  const company: Record<string, string | number> = {};
+  const rowData: Record<string, string | number> = {};
   row.columns.forEach((col, idx) => {
-    company[col] = row.values[0][idx] as string | number;
+    rowData[col] = row.values[0][idx] as string | number;
   });
 
-  return deserializeCompany(company);
+  return deserializeCompany(rowData);
 }
 
 export function getAllCompanies(options?: QueryOptions): QueryResult<Company> {
@@ -129,11 +129,11 @@ export function getAllCompanies(options?: QueryOptions): QueryResult<Company> {
   if (result.length > 0 && result[0].values.length > 0) {
     const row = result[0];
     row.values.forEach((values) => {
-      const company: Record<string, string | number> = {};
+      const rowData: Record<string, string | number> = {};
       row.columns.forEach((col, idx) => {
-        company[col] = values[idx] as string | number;
+        rowData[col] = values[idx] as string | number;
       });
-      companies.push(deserializeCompany(company));
+      companies.push(deserializeCompany(rowData));
     });
   }
 

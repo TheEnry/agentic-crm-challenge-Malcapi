@@ -67,12 +67,12 @@ export function getTask(id: string): Task | null {
   }
 
   const row = result[0];
-  const task: Record<string, string | number> = {};
+  const rowData: Record<string, string | number> = {};
   row.columns.forEach((col, idx) => {
-    task[col] = row.values[0][idx] as string | number;
+    rowData[col] = row.values[0][idx] as string | number;
   });
 
-  return deserializeTask(task);
+  return deserializeTask(rowData);
 }
 
 export function getAllTasks(options?: QueryOptions): QueryResult<Task> {
@@ -99,11 +99,11 @@ export function getAllTasks(options?: QueryOptions): QueryResult<Task> {
   if (result.length > 0 && result[0].values.length > 0) {
     const row = result[0];
     row.values.forEach((values) => {
-      const task: Record<string, string | number> = {};
+      const rowData: Record<string, string | number> = {};
       row.columns.forEach((col, idx) => {
-        task[col] = values[idx] as string | number;
+        rowData[col] = values[idx] as string | number;
       });
-      tasks.push(deserializeTask(task));
+      tasks.push(deserializeTask(rowData));
     });
   }
 

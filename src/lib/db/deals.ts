@@ -83,12 +83,12 @@ export function getDeal(id: string): Deal | null {
   }
 
   const row = result[0];
-  const deal: Record<string, string | number> = {};
+  const rowData: Record<string, string | number> = {};
   row.columns.forEach((col, idx) => {
-    deal[col] = row.values[0][idx] as string | number;
+    rowData[col] = row.values[0][idx] as string | number;
   });
 
-  return deserializeDeal(deal);
+  return deserializeDeal(rowData);
 }
 
 export function getAllDeals(options?: QueryOptions): QueryResult<Deal> {
@@ -115,11 +115,11 @@ export function getAllDeals(options?: QueryOptions): QueryResult<Deal> {
   if (result.length > 0 && result[0].values.length > 0) {
     const row = result[0];
     row.values.forEach((values) => {
-      const deal: Record<string, string | number> = {};
+      const rowData: Record<string, string | number> = {};
       row.columns.forEach((col, idx) => {
-        deal[col] = values[idx] as string | number;
+        rowData[col] = values[idx] as string | number;
       });
-      deals.push(deserializeDeal(deal));
+      deals.push(deserializeDeal(rowData));
     });
   }
 
