@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { mockContacts } from '@/crm/mock/contacts';
+import { useContacts } from '@/hooks/use-contacts';
+import { Contact } from '@/crm/types/contact';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { RiCheckboxCircleFill } from '@remixicon/react';
 import { format } from 'date-fns';
@@ -61,30 +63,19 @@ const FormSchema = z.object({
   name: z.string().min(1, 'Name is required'),
   company: z.string().optional(),
   position: z.string().optional(),
-  socialLinks: z.string().optional(),
   logo: z.string().optional(),
-  domain: z.string().optional(),
-  email: z.string().email('Please enter a valid email').optional(),
+  email: z.string().email('Please enter a valid email').optional().or(z.literal('')),
   phone: z.string().optional(),
-  description: z.string().optional(),
-  categoryIds: z.array(z.string()).optional(),
-  contactIds: z.array(z.string()).optional(),
   address: z.string().optional(),
   state: z.string().optional(),
   city: z.string().optional(),
   zip: z.string().optional(),
   country: z.string().optional(),
-  angelList: z.string().optional(),
   linkedin: z.string().optional(),
-  connectionStrengthId: z.string().optional(),
-  x: z.string().optional(),
+  twitter: z.string().optional(),
+  github: z.string().optional(),
   instagram: z.string().optional(),
   facebook: z.string().optional(),
-  telegram: z.string().optional(),
-  foundedAt: z.string().optional(),
-  estimatedArrId: z.string().optional(),
-  employeeRangeId: z.string().optional(),
-  teamId: z.string().optional(),
 });
 
 export function NewCompanySheet({
@@ -94,50 +85,93 @@ export function NewCompanySheet({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const { addContact } = useContacts();
+  const [createMore, setCreateMore] = useState(false);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       name: '',
       position: '',
       logo: '',
-      domain: '',
       email: '',
       phone: '',
-      description: '',
-      categoryIds: [],
-      contactIds: [],
       address: '',
       state: '',
       city: '',
       zip: '',
       country: '',
-      angelList: '',
       linkedin: '',
-      connectionStrengthId: '',
-      x: '',
+      twitter: '',
+      github: '',
       instagram: '',
       facebook: '',
-      telegram: '',
-      foundedAt: '',
-      estimatedArrId: '',
-      employeeRangeId: '',
-      teamId: '',
     },
   });
 
-  const onSubmit = () => {
-    toast.custom((t) => (
-      <Alert variant="mono" icon="primary" onClose={() => toast.dismiss(t)}>
-        <AlertIcon>
-          <RiCheckboxCircleFill />
-        </AlertIcon>
-        <AlertTitle>Your form has been successfully submitted</AlertTitle>
-      </Alert>
-    ));
+  const onSubmit = (data: z.infer<typeof FormSchema>) => {
+    try {
+      // Generate unique ID
+      const id = `contact-${Date.now()}`;
+      
+      // Build social links object
+      const socialLinks: Contact['socialLinks'] = {};
+      if (data.linkedin) socialLinks.linkedin = data.linkedin;
+      if (data.twitter) socialLinks.twitter = data.twitter;
+      if (data.github) socialLinks.github = data.github;
+      if (data.instagram) socialLinks.instagram = data.instagram;
+      if (data.facebook) socialLinks.facebook = data.facebook;
+
+      // Create contact object
+      const newContact: Contact = {
+        id,
+        name: data.name,
+        avatar: selectedUser?.avatar || '',
+        initials: data.name.split(' ').map(n => n[0]).join('').toUpperCase(),
+        email: data.email || undefined,
+        phone: data.phone || undefined,
+        position: data.position || undefined,
+        company: data.company || undefined,
+        address: data.address || undefined,
+        state: data.state || undefined,
+        city: data.city || undefined,
+        zip: data.zip || undefined,
+        country: data.country || undefined,
+        logo: data.logo || undefined,
+        socialLinks: Object.keys(socialLinks).length > 0 ? socialLinks : undefined,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+
+      // Add contact to database
+      addContact(newContact);
+
+      // Show success toast
+      toast.custom((t) => (
+        <Alert variant="mono" icon="primary" onClose={() => toast.dismiss(t)}>
+          <AlertIcon>
+            <RiCheckboxCircleFill />
+          </AlertIcon>
+          <AlertTitle>Contact created successfully</AlertTitle>
+        </Alert>
+      ));
+
+      // Reset form if not creating more
+      if (!createMore) {
+        form.reset();
+        onOpenChange(false);
+      } else {
+        form.reset();
+      }
+    } catch (error) {
+      console.error('Error creating contact:', error);
+      toast.error('Failed to create contact');
+    }
   };
 
   const handleReset = () => {
     form.reset();
+    onOpenChange(false);
   };
 
   const companies = mockContacts.map((contact) => ({
@@ -859,7 +893,12 @@ export function NewCompanySheet({
 
         <SheetFooter className="flex items-center not-only-of-type:justify-between border-t py-3.5 px-5 border-border">
           <div className="flex items-center space-x-2">
-            <Switch id="create-more" size="sm" />
+            <Switch 
+              id="create-more" 
+              size="sm" 
+              checked={createMore}
+              onCheckedChange={setCreateMore}
+            />
             <Label
               htmlFor="create-more"
               className="text-xs text-secondary-foreground"
@@ -872,7 +911,7 @@ export function NewCompanySheet({
             <Button variant="outline" onClick={handleReset}>
               Cancel
             </Button>
-            <Button onClick={onSubmit}>Save Contact</Button>
+            <Button onClick={form.handleSubmit(onSubmit)}>Save Contact</Button>
           </div>
         </SheetFooter>
       </SheetContent>
