@@ -174,11 +174,21 @@ export function NewCompanySheet({
     onOpenChange(false);
   };
 
-  const companies = mockContacts.map((contact) => ({
-    value: contact.id,
-    label: contact.company,
-    logo: contact.logo as string,
-  }));
+  // Create unique companies list based on company name
+  const companies = Array.from(
+    new Map(
+      mockContacts
+        .filter((contact) => contact.company) // Filter out contacts without company
+        .map((contact) => [
+          contact.company, // Use company name as key for uniqueness
+          {
+            value: contact.company as string,
+            label: contact.company as string,
+            logo: contact.logo as string,
+          },
+        ])
+    ).values()
+  );
 
   const users = [
     {
