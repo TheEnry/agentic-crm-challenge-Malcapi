@@ -56,7 +56,7 @@ export function EditContactSheet({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
-  const { modifyContact } = useContacts();
+  const { modifyContact, removeContact } = useContacts();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -153,6 +153,29 @@ export function EditContactSheet({
   const handleCancel = () => {
     form.reset();
     onOpenChange(false);
+  };
+
+  const handleDelete = () => {
+    if (!contact) return;
+    
+    if (confirm('Are you sure you want to delete this contact?')) {
+      try {
+        removeContact(contact.id);
+        onOpenChange(false);
+        
+        toast.custom((t) => (
+          <Alert variant="mono" icon="primary" onClose={() => toast.dismiss(t)}>
+            <AlertIcon>
+              <RiCheckboxCircleFill />
+            </AlertIcon>
+            <AlertTitle>Contact deleted successfully</AlertTitle>
+          </Alert>
+        ));
+      } catch (error) {
+        console.error('Error deleting contact:', error);
+        toast.error('Failed to delete contact');
+      }
+    }
   };
 
   return (
@@ -355,7 +378,14 @@ export function EditContactSheet({
           </ScrollArea>
         </SheetBody>
 
-        <SheetFooter className="flex items-center justify-end border-t py-3.5 px-5 border-border">
+        <SheetFooter className="flex items-center justify-between border-t py-3.5 px-5 border-border">
+          <Button 
+            variant="outline" 
+            onClick={handleDelete}
+            className="text-destructive hover:text-destructive"
+          >
+            Delete Contact
+          </Button>
           <div className="flex items-center gap-2">
             <Button variant="outline" onClick={handleCancel}>
               Cancel

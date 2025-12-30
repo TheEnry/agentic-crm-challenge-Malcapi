@@ -395,22 +395,18 @@ export function NewCompanySheet({
                                       className="size-4"
                                       src={
                                         companies.find(
-                                          (c) => c.value === field.value,
+                                          (c) => c.label === field.value,
                                         )?.logo
                                       }
                                       alt={
                                         companies.find(
-                                          (c) => c.value === field.value,
+                                          (c) => c.label === field.value,
                                         )?.label
                                       }
                                     />
                                   </Avatar>
                                   <span className="text-sm">
-                                    {
-                                      companies.find(
-                                        (c) => c.value === field.value,
-                                      )?.label
-                                    }
+                                    {field.value}
                                   </span>
                                 </div>
                               ) : (
@@ -436,10 +432,12 @@ export function NewCompanySheet({
                                     {companies.map((company) => (
                                       <CommandItem
                                         key={company.value}
-                                        value={company.value}
-                                        onSelect={() =>
-                                          field.onChange(company.value)
-                                        }
+                                        value={company.label || ''}
+                                        onSelect={() => {
+                                          field.onChange(company.label);
+                                          form.setValue('logo', company.logo);
+                                        }}
+                                      
                                       >
                                         <div className="flex items-center gap-2">
                                           <Avatar className="flex items-center justify-center size-5 border border-border rounded-full">

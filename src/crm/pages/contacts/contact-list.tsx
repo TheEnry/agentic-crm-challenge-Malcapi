@@ -44,7 +44,7 @@ interface ContactListProps {
 }
 
 const ContactList = ({ filter = 'all' }: ContactListProps) => {
-  const { contacts: dbContacts, loading, removeContact } = useContacts();
+  const { contacts: dbContacts, loading } = useContacts();
   const [searchQuery, setSearchQuery] = useState('');
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -58,16 +58,6 @@ const ContactList = ({ filter = 'all' }: ContactListProps) => {
 
   const handleEditContact = (contact: Contact) => {
     setEditingContact(contact);
-  };
-
-  const handleDeleteContact = (id: string) => {
-    if (confirm('Are you sure you want to delete this contact?')) {
-      try {
-        removeContact(id);
-      } catch (error) {
-        console.error('Failed to delete contact:', error);
-      }
-    }
   };
 
   const columns: ColumnDef<Contact>[] = [
@@ -262,29 +252,19 @@ const ContactList = ({ filter = 'all' }: ContactListProps) => {
     {
       id: 'actions',
       header: 'Actions',
-      size: 120,
+      size: 80,
       cell: ({ row }) => {
         const contact = row.original;
         
         return (
-          <div className="flex items-center gap-2">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => handleEditContact(contact)}
-              className="h-8 px-2"
-            >
-              Edit
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => handleDeleteContact(contact.id)}
-              className="h-8 px-2 text-destructive hover:text-destructive"
-            >
-              Delete
-            </Button>
-          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => handleEditContact(contact)}
+            className="h-8 px-2"
+          >
+            Edit
+          </Button>
         );
       },
       enableSorting: false,
