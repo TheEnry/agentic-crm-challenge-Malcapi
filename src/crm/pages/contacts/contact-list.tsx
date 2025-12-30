@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { mockContacts } from '@/crm/mock/contacts';
+import { useContacts } from '@/hooks/use-contacts';
 import { Contact } from '@/crm/types/contact';
 import {
   ColumnDef,
@@ -43,6 +43,7 @@ interface ContactListProps {
 }
 
 const ContactList = ({ filter = 'all' }: ContactListProps) => {
+  const { contacts: dbContacts, loading } = useContacts();
   const [searchQuery, setSearchQuery] = useState('');
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -244,7 +245,7 @@ const ContactList = ({ filter = 'all' }: ContactListProps) => {
   ];
 
   const filteredContacts = useMemo(() => {
-    let contacts = mockContacts;
+    let contacts = dbContacts;
     const now = new Date();
     const todayStart = new Date(
       now.getFullYear(),
@@ -301,7 +302,7 @@ const ContactList = ({ filter = 'all' }: ContactListProps) => {
         contact.position?.toLowerCase().includes(searchQuery.toLowerCase()) ||
         contact.company?.toLowerCase().includes(searchQuery.toLowerCase()),
     );
-  }, [searchQuery, filter, selectedPositions, selectedCompanies]);
+  }, [searchQuery, filter, selectedPositions, selectedCompanies, dbContacts]);
 
   const formatDate = (date: Date) => {
     return new Intl.DateTimeFormat('en-US', {
@@ -330,6 +331,17 @@ const ContactList = ({ filter = 'all' }: ContactListProps) => {
       rowSelection,
     },
   });
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center p-8">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto mb-2"></div>
+          <p className="text-sm text-gray-600">Loading contacts...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <DataGrid
@@ -388,7 +400,7 @@ const ContactList = ({ filter = 'all' }: ContactListProps) => {
                       <CommandEmpty>No positions found.</CommandEmpty>
                       <CommandGroup>
                         {Array.from(
-                          new Set(mockContacts.map((c) => c.position)),
+                          new Set(dbContacts.map((c) => c.position)),
                         ).map((position) => (
                           <CommandItem
                             key={position}
@@ -439,7 +451,7 @@ const ContactList = ({ filter = 'all' }: ContactListProps) => {
                       <CommandEmpty>No companies found.</CommandEmpty>
                       <CommandGroup>
                         {Array.from(
-                          new Set(mockContacts.map((c) => c.company)),
+                          new Set(dbContacts.map((c) => c.company)),
                         ).map((company) => (
                           <CommandItem
                             key={company}
@@ -465,7 +477,7 @@ const ContactList = ({ filter = 'all' }: ContactListProps) => {
                                 <AvatarImage
                                   className="size-4"
                                   src={
-                                    mockContacts.find(
+                                    dbContacts.find(
                                       (c) => c.company === company,
                                     )?.logo
                                   }
