@@ -37,6 +37,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover';
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { EditContactSheet } from './edit-contact-sheet';
 
 interface ContactListProps {
   filter?: 'all' | 'today' | 'week' | 'completed';
@@ -53,6 +54,12 @@ const ContactList = ({ filter = 'all' }: ContactListProps) => {
   const [rowSelection, setRowSelection] = useState<Record<string, boolean>>({});
   const [selectedPositions, setSelectedPositions] = useState<string[]>([]);
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
+  const [editingContact, setEditingContact] = useState<Contact | null>(null);
+
+  const handleEditContact = (contact: Contact) => {
+    setEditingContact(contact);
+  };
+
   const columns: ColumnDef<Contact>[] = [
     {
       id: 'select',
@@ -242,6 +249,26 @@ const ContactList = ({ filter = 'all' }: ContactListProps) => {
       },
       enableSorting: true,
     },
+    {
+      id: 'actions',
+      header: 'Actions',
+      size: 80,
+      cell: ({ row }) => {
+        const contact = row.original;
+        
+        return (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => handleEditContact(contact)}
+            className="h-8 px-2"
+          >
+            Edit
+          </Button>
+        );
+      },
+      enableSorting: false,
+    },
   ];
 
   const filteredContacts = useMemo(() => {
@@ -344,17 +371,18 @@ const ContactList = ({ filter = 'all' }: ContactListProps) => {
   }
 
   return (
-    <DataGrid
-      table={table}
-      recordCount={filteredContacts.length}
-      tableLayout={{
-        dense: true,
-        columnsPinnable: true,
-        columnsResizable: true,
-        columnsMovable: true,
-        columnsVisibility: true,
-      }}
-    >
+    <>
+      <DataGrid
+        table={table}
+        recordCount={filteredContacts.length}
+        tableLayout={{
+          dense: true,
+          columnsPinnable: true,
+          columnsResizable: true,
+          columnsMovable: true,
+          columnsVisibility: true,
+        }}
+      >
       <Card className="border-none shadow-none">
         <CardHeader className="px-4 py-3 -mt-4">
           <div className="flex items-center flex-wrap gap-2 justify-between w-full">
@@ -519,6 +547,13 @@ const ContactList = ({ filter = 'all' }: ContactListProps) => {
         </CardFooter>
       </Card>
     </DataGrid>
+    
+    <EditContactSheet
+      contact={editingContact}
+      open={!!editingContact}
+      onOpenChange={(open) => !open && setEditingContact(null)}
+    />
+  </>
   );
 };
 
