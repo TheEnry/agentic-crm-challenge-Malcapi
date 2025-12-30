@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Contact } from '@/crm/types/contact';
 import { useContacts } from '@/hooks/use-contacts';
 import { zodResolver } from '@hookform/resolvers/zod';
