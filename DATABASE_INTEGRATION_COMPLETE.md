@@ -9,7 +9,7 @@ The SQLite database has been successfully connected to the contacts list in the 
 ### 1. Database Initialization (src/App.tsx)
 - Added database initialization on app startup
 - Implemented loading screen while database initializes
-- Automatically seeds database with mock contacts on first run
+- Automatically ingests database with mock contacts on first run
 - Graceful error handling if database fails to initialize
 
 ### 2. Custom Hook (src/hooks/use-contacts.ts)
@@ -18,10 +18,10 @@ The SQLite database has been successfully connected to the contacts list in the 
 - Includes error handling
 - Returns `refreshContacts` function for future CRUD operations
 
-### 3. Database Seeding (src/lib/db/seed.ts)
+### 3. Data Ingestion (src/lib/db/ingest.ts)
 - Automatically populates database with mock contacts on first run
 - Checks if database already has data to avoid duplicates
-- Imports all mock contacts into SQLite database
+- Ingests all mock contacts into SQLite database
 
 ### 4. Updated ContactList Component (src/crm/pages/contacts/contact-list.tsx)
 - Replaced `mockContacts` import with `useContacts` hook
@@ -32,7 +32,7 @@ The SQLite database has been successfully connected to the contacts list in the 
 ## How It Works
 
 1. **App Startup**: When the app loads, `App.tsx` initializes the SQLite database
-2. **First Run**: If the database is empty, it's automatically seeded with mock contacts
+2. **First Run**: If the database is empty, mock contacts data is automatically ingested
 3. **Subsequent Runs**: Contacts are loaded from localStorage (persistent)
 4. **Contact List**: The `ContactList` component fetches contacts from the database via the `useContacts` hook
 5. **Data Persistence**: All data persists across browser sessions via localStorage
@@ -41,7 +41,7 @@ The SQLite database has been successfully connected to the contacts list in the 
 
 ✅ **Browser-based**: No server required, runs entirely in the browser
 ✅ **Persistent**: Data survives page refreshes and browser restarts
-✅ **Automatic Seeding**: Mock data automatically imported on first run
+✅ **Automatic Ingestion**: Mock data automatically imported on first run
 ✅ **Loading States**: User-friendly loading indicators during initialization
 ✅ **Error Handling**: Graceful fallback if database initialization fails
 ✅ **TypeScript**: Full type safety maintained throughout
@@ -54,20 +54,20 @@ The SQLite database has been successfully connected to the contacts list in the 
 2. Navigate to the Contacts page
 3. Verify contacts are loaded from the database
 4. Refresh the page - contacts should persist
-5. Clear localStorage and refresh - contacts should be re-seeded
+5. Clear localStorage and refresh - contacts data should be re-ingested
 
 ### Browser Console
 Check the browser console for confirmation messages:
 ```
-Database initialized and seeded
-Seeded 50 contacts successfully
+Database initialized and data ingested
+Ingested 50 contacts successfully
 ```
 
 ## Files Changed
 
 - ✅ `src/App.tsx` - Database initialization
 - ✅ `src/hooks/use-contacts.ts` - New custom hook
-- ✅ `src/lib/db/seed.ts` - New seeding function
+- ✅ `src/lib/db/ingest.ts` - Data ingestion function
 - ✅ `src/crm/pages/contacts/contact-list.tsx` - Updated to use database
 
 ## Next Steps
@@ -86,7 +86,7 @@ The database is now fully integrated! Future enhancements could include:
 ```
 App.tsx
   ├─ initDatabase() → Initializes SQLite
-  ├─ seedContacts() → Populates with mock data (first run)
+  ├─ ingestContacts() → Populates with mock data (first run)
   └─ Renders app when ready
 
 ContactList Component
